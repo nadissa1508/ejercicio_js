@@ -8,28 +8,22 @@ document.addEventListener('DOMContentLoaded', () => {
     container.style.height = '100vh';
 
     const fetchButton = document.createElement('button');
-    fetchButton.textContent = 'Fetch Fruits';
-    fetchButton.onclick = fetchFruits;
-
-    // const clearButton = document.createElement('button');
-    // clearButton.textContent = 'Clear';
-    // clearButton.onclick = clearResults;
-    // clearButton.style.display = 'none';
+    fetchButton.textContent = 'Consultar información';
+    fetchButton.onclick = fetchCharacters;
 
     const resultsContainer = document.createElement('div');
     resultsContainer.id = 'results';
 
     container.appendChild(fetchButton);
-    // container.appendChild(clearButton);
     container.appendChild(resultsContainer);
     document.body.appendChild(container);
 });
 
-function fetchFruits() {
+function fetchCharacters() {
     const resultsContainer = document.getElementById('results');
-    resultsContainer.innerHTML = 'Loading fruits...';
+    resultsContainer.innerHTML = 'Cargando personajes...';
 
-    fetch('https://api.api-onepiece.com/v2/fruits/en')
+    fetch('https://thesimpsonsquoteapi.glitch.me/quotes?count=100')
         .then(response => response.json())
         .then(data => {
             const resultsContainer = document.getElementById('results');
@@ -42,30 +36,23 @@ function fetchFruits() {
             resultsContainer.style.display = 'grid';
             resultsContainer.style.gridTemplateColumns = 'repeat(3, 1fr)';
             resultsContainer.style.gap = '10px';
-            // filter all data where filename has something after the url https://images.api-onepiece.com/fruits/
-            dataImages = data.filter(fruit => fruit.filename !== 'https://images.api-onepiece.com/fruits/');
-            // get random 10 fruits
-            dataImages = dataImages.sort(() => Math.random() - 0.5).slice(0, 10);
-            dataImages.forEach(fruit => {
-                const fruitElement = document.createElement('div');
-                fruitElement.innerHTML = `
-                    <p>ID: ${fruit.id}</p>
-                    <p>Name: ${fruit.name}</p>
-                    <img src="${fruit.filename}" alt="${fruit.name}" width="100px" />
+           
+            dataFiltred = data.sort(() => Math.random() - 0.5).slice(0, 10);
+            dataFiltred.forEach(character => {
+                const characterElement = document.createElement('div');
+                characterElement.innerHTML = `
+                    <p>Personaje: ${character.character}</p>
+                    <p>Linea: ${character.quote}</p>
+                    <img src="${character.image}" alt="${character.character}" width="100px" />
                 `;
 
-                fruitElement.style.border = '1px solid #ccc';
-                fruitElement.style.padding = '10px';
-                fruitElement.style.borderRadius = '16px';
-                resultsContainer.appendChild(fruitElement);
+                characterElement.style.border = '1px solid #ccc';
+                characterElement.style.padding = '10px';
+                characterElement.style.borderRadius = '16px';
+                resultsContainer.appendChild(characterElement);
             });
             document.querySelector('button:nth-of-type(2)').style.display = 'block';
         })
-        .catch(error => console.error('Error fetching fruits:', error));
+        .catch(error => console.error('Error fetching characters:', error));
 }
 
-function clearResults() {
-    const resultsContainer = document.getElementById('results');
-    resultsContainer.innerHTML = '';
-    document.querySelector('button:nth-of-type(2)').style.display = 'none';
-}
